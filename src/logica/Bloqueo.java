@@ -4,8 +4,7 @@ import persistencia.Proceso;
 
 public class Bloqueo implements Runnable {
 
-	private static final class Lock { }
-	private final Object lock = new Lock();
+	public static final Object lock = Lock.lock;
 
 	private Proceso proceso;
 	private int tiempo;
@@ -18,7 +17,7 @@ public class Bloqueo implements Runnable {
 	@Override
 	public void run() {
 		synchronized (lock) {
-			for (int i = tiempo; i >=0; i--) {
+			for (int i = tiempo; i >0; i--) {
 				System.out.println(proceso.toString()+ "Tiempo de bloquoe restante: "+i);
 				try {
 					Thread.sleep(1000);
@@ -26,7 +25,8 @@ public class Bloqueo implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			notifyAll();
+			proceso.desbloquear();
+			lock.notify();
 		}
 	}
 

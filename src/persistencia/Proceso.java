@@ -8,6 +8,7 @@ public class Proceso {
 	private int tamanio;
 	private int tiempoEjecutado;
 	private boolean bloqueado;
+	private boolean terminadoPorError;
 	
 	/**
 	 * Constructor por defecto
@@ -36,7 +37,7 @@ public class Proceso {
 	 * Añade un intervalo de tiempo al tiempo que lleva ejecutado el proceso
 	 * @param tiempo
 	 */
-	public void sumarTiempo(int tiempo){
+	public void sumarTiempoEjecutado(int tiempo){
 		tiempoEjecutado+=tiempo;
 	}
 	
@@ -48,13 +49,21 @@ public class Proceso {
 		return tiempoEjecucion-tiempoEjecutado;
 	}
 	
+	/**
+	 * Vambia el estado de bloqueo del proceso a true
+	 */
 	public void bloquear(){
 		bloqueado=true;
 	}
 	
+	/**
+	 * Vambia el estado de bloqueo del proceso a false
+	 */
 	public void desbloquear(){
 		bloqueado=false;
 	}
+	
+	
 
 	public int getPID() {
 		return PID;
@@ -111,6 +120,14 @@ public class Proceso {
 
 	public void setBloqueado(boolean bloqueado) {
 		this.bloqueado = bloqueado;
+	}
+
+	public boolean isTerminadoPorError() {
+		return terminadoPorError;
+	}
+
+	public void setTerminadoPorError(boolean terminadoPorError) {
+		this.terminadoPorError = terminadoPorError;
 	}
 
 	@Override

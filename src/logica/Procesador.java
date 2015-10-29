@@ -7,8 +7,7 @@ import persistencia.Proceso;
 
 public class Procesador implements Runnable {
 
-	private static final class Lock { }
-	private final Object lock = new Lock();
+	public static final Object lock = Lock.lock;
 
 	private ArrayDeque<Proceso> procesos;
 	private Proceso proceso;
@@ -24,16 +23,21 @@ public class Procesador implements Runnable {
 	public void desbloquearProceso(){
 		proceso.desbloquear();
 	}
+	
+	public void terminarProceso(){
+		proceso.setTerminadoPorError(true);
+		System.out.println("Proceso "+proceso.toString()+" terminado por error de E/S");
+	}
 
 	@Override
 	public void run() {
 		while(!procesos.isEmpty()){
 			synchronized (lock) {
 				proceso=procesos.remove();
-				for (int i = 0; i < proceso.getTiempoEjecucion(); i++) {
+				while(proceso.getTiempoEjecutado()<proceso.getTiempoEjecucion()&&!proceso.isTerminadoPorError()) {
 					System.out.println(proceso.toString());
 					try {
-						proceso.sumarTiempo(1);
+						proceso.sumarTiempoEjecutado(1);
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -65,10 +69,13 @@ public class Procesador implements Runnable {
 
 		Scanner s=new Scanner(System.in);
 		int opcion=0;
-		while(opcion!=2){
+		while(opcion!=3){
 			opcion=s.nextInt();
 			if(opcion==1){
 				procesador.bloquearProceso();
+			}
+			if(opcion==2){
+				procesador.terminarProceso();
 			}
 		}
 		s.close();

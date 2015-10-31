@@ -24,9 +24,16 @@ public class Procesador implements Runnable {
 		proceso.desbloquear();
 	}
 	
-	public void terminarProceso(){
-		proceso.setTerminadoPorError(true);
-		System.out.println("Proceso "+proceso.toString()+" terminado por error de E/S");
+	public boolean terminarProcesoPorError(){
+		if(proceso.isBloqueado()){
+			proceso.setTerminadoPorError(true);
+			System.out.println(proceso.toString()+" terminado por error de E/S");
+			return true;
+		}
+		else{
+			System.out.println("El "+proceso.toString()+" no fue terminado por error de E/S, este no se encuentra bloqueado");
+			return false;
+		}
 	}
 
 	@Override
@@ -51,6 +58,7 @@ public class Procesador implements Runnable {
 						}
 					}
 				}
+				System.out.println(proceso.toString()+" terminado");
 			}
 		}
 	}
@@ -75,7 +83,7 @@ public class Procesador implements Runnable {
 				procesador.bloquearProceso();
 			}
 			if(opcion==2){
-				procesador.terminarProceso();
+				procesador.terminarProcesoPorError();
 			}
 		}
 		s.close();

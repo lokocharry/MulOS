@@ -19,7 +19,7 @@ public class Proceso {
 	}
 
 	/**
-	 * Contrustor con parametros de inicialización de un proceso
+	 * Constructor con parametros de inicialización de un proceso
 	 * @param pID Identificador unico del proceso
 	 * @param nombre Nombre del Proceso
 	 * @param tiempoEjecucion Tiempo de ejecución del proceso
@@ -63,8 +63,10 @@ public class Proceso {
 		bloqueado=false;
 	}
 	
-	
-
+	/**
+	 * 
+	 * @return Identificador de proceso
+	 */
 	public int getPID() {
 		return PID;
 	}

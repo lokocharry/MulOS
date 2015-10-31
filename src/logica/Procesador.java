@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Scanner;
 
 import persistencia.Proceso;
+import presentacion.PanelSimulacion;
 
 public class Procesador implements Runnable {
 
@@ -11,6 +12,8 @@ public class Procesador implements Runnable {
 
 	private ArrayDeque<Proceso> procesos;
 	private Proceso proceso;
+	
+	private PanelSimulacion panelSimulacion;
 
 	public Procesador(ArrayDeque<Proceso> procesos) {
 		this.procesos = procesos;
@@ -44,6 +47,7 @@ public class Procesador implements Runnable {
 				while(proceso.getTiempoEjecutado()<proceso.getTiempoEjecucion()&&!proceso.isTerminadoPorError()) {
 					System.out.println(proceso.toString());
 					try {
+						panelSimulacion.actualizarTiempoEjecucion(proceso.getTiempoEjecucion(), proceso.tiempoRestante());
 						proceso.sumarTiempoEjecutado(1);
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
@@ -51,16 +55,21 @@ public class Procesador implements Runnable {
 					}
 					if(proceso.isBloqueado()){
 						try {
-							new Thread(new Bloqueo(proceso, 5)).start();;
+							new Thread(new Bloqueo(proceso, 5, panelSimulacion)).start();;
 							lock.wait();
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 					}
 				}
+				panelSimulacion.actualizarTiempoEjecucion(proceso.getTiempoEjecucion(), proceso.tiempoRestante());
 				System.out.println(proceso.toString()+" terminado");
 			}
 		}
+	}
+
+	public void setPanelSimulacion(PanelSimulacion panelSimulacion) {
+		this.panelSimulacion = panelSimulacion;
 	}
 
 	public static void main(String[] args) {

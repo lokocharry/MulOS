@@ -1,13 +1,20 @@
 package presentacion;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
+import logica.Procesador;
+import persistencia.Proceso;
 import run.Run;
 
 
@@ -20,8 +27,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	
 	private JMenuBar menubar;
     private DialogoCrearProceso crearProceso;
+    private JScrollPane panelProcesos;
+    private PanelSimulacion panelSimulacion;
+    private JTable tablaProcesos;
     
     private Run run;
+    
+    private Procesador procesador;
 
     public VentanaPrincipal(Run run) {
     	this.run=run;
@@ -31,30 +43,63 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         JMenu fileMenu = new JMenu ("Archivo");
         JMenuItem agregar_procesosItem = new JMenuItem ("Agregar procesos");
         agregar_procesosItem.setActionCommand("agregarProcesos");
+        agregar_procesosItem.addActionListener(this);
         fileMenu.add (agregar_procesosItem);
+        JMenuItem iniciarItem = new JMenuItem ("Iniciar simulación");
+        iniciarItem.setActionCommand("iniciar");
+        iniciarItem.addActionListener(this);
+        fileMenu.add (iniciarItem);
         JMenuItem salirItem = new JMenuItem ("Salir");
         salirItem.setActionCommand("salir");
+        salirItem.addActionListener(this);
         fileMenu.add (salirItem);
         JMenu helpMenu = new JMenu ("Ayuda");
         JMenuItem aboutItem = new JMenuItem ("About");
         aboutItem.setActionCommand("about");
+        aboutItem.addActionListener(this);
         helpMenu.add (aboutItem);
 
         //construct components
         menubar = new JMenuBar();
         menubar.add (fileMenu);
         menubar.add (helpMenu);
+        
+        panelProcesos=new JScrollPane();
+        panelProcesos.setBorder(BorderFactory.createTitledBorder("Procesos"));
+        DefaultTableModel model= new DefaultTableModel();
+        tablaProcesos = new JTable();
+        tablaProcesos.setModel(model);
+        model.addColumn("PID");
+        model.addColumn("Nombre");
+        model.addColumn("Tamaño");
+        model.addColumn("Tiempo");
+        tablaProcesos.setEnabled(false);
+        tablaProcesos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        panelProcesos.setViewportView(tablaProcesos);
+        
+        panelSimulacion=new PanelSimulacion(procesador);
+        panelSimulacion.setBorder(BorderFactory.createTitledBorder("Simulación"));
 
         //adjust size and set layout
-        setSize(667, 366);
-        setLayout (null);
+        setSize(780, 366);
+        setLayout (new GridLayout());
         setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 
         //add components
-        add (menubar);
+        setJMenuBar(menubar);
+        add(panelProcesos);
+        add(panelSimulacion);
 
         //set component bounds (only needed by Absolute Positioning)
         menubar.setBounds (0, 0, 670, 25);
+      
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+    
+    public void agregarProcesoATabla(Proceso p){
+    	DefaultTableModel model=(DefaultTableModel) tablaProcesos.getModel();
+    	model.addRow(p.toVector());
     }
 
 	@Override
@@ -63,6 +108,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		switch (command) {
 		case "agregarProcesos":
 			crearProceso.setVisible(true);
+			break;
+		case "iniciar":
+			procesador=new Procesador(run.getProcesos());
+			procesador.setPanelSimulacion(panelSimulacion);
+			panelSimulacion.setProcesador(procesador);
+			new Thread(procesador).start();
 			break;
 		case "salir":
 			System.exit(0);
@@ -73,6 +124,10 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		default:
 			break;
 		}
+	}
+
+	public PanelSimulacion getPanelSimulacion() {
+		return panelSimulacion;
 	}
 }
 

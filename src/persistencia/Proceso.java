@@ -1,5 +1,7 @@
 package persistencia;
 
+import java.util.Vector;
+
 public class Proceso {
 	
 	private int PID;
@@ -61,6 +63,15 @@ public class Proceso {
 	 */
 	public void desbloquear(){
 		bloqueado=false;
+	}
+	
+	public Vector<Object> toVector(){
+		Vector<Object> vector=new Vector<>();
+		vector.add(PID);
+		vector.add(nombre);
+		vector.add(tamanio);
+		vector.add(tiempoEjecucion);
+		return vector;
 	}
 	
 	/**

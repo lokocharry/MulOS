@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -37,12 +38,14 @@ public class DialogoCrearProceso extends JDialog implements ActionListener {
 	private JSpinner txtTamanio;
 	private JSpinner txtPrioridad;
 	
+	private VentanaPrincipal ventanaPrincipal;
+	
 	private Run run;
 
 	public DialogoCrearProceso(Run run, VentanaPrincipal ventanaPrincipal) {
 		this.run=run;
-		
-		setLocationRelativeTo(ventanaPrincipal);
+		this.ventanaPrincipal=ventanaPrincipal;
+		setModal(true);
 		
 		//construct components
 		btnAgregar = new JButton ("Agregar");
@@ -72,6 +75,7 @@ public class DialogoCrearProceso extends JDialog implements ActionListener {
 		setSize(271, 240);
 		setResizable(false);
 		setLayout (null);
+		setLocationRelativeTo(null);
 
 		//add components
 		add (btnAgregar);
@@ -111,12 +115,15 @@ public class DialogoCrearProceso extends JDialog implements ActionListener {
 		JButton boton=(JButton)e.getSource();
 		if(boton==btnAgregar){
 			Proceso p=new Proceso(pID, txtNombre.getText(), (int)txtTiempo.getValue(), (int)txtTamanio.getValue());
+			pID++;
 			run.getProcesos().add(p);
+			ventanaPrincipal.agregarProcesoATabla(p);
 			
 			txtNombre.setText("");
 			txtTamanio.setValue(0);
 			txtTiempo.setValue(0);
-			txtPrioridad.setValue(0);			
+			txtPrioridad.setValue(0);
+			JOptionPane.showMessageDialog(null, "Proceso Agregado");
 		}
 		if(boton==btnCancelar){
 			txtNombre.setText("");

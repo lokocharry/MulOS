@@ -1,6 +1,7 @@
 package logica;
 
 import persistencia.Proceso;
+import presentacion.PanelSimulacion;
 
 public class Bloqueo implements Runnable {
 
@@ -8,8 +9,11 @@ public class Bloqueo implements Runnable {
 
 	private Proceso proceso;
 	private int tiempo;
+	
+	private PanelSimulacion panelSimulacion;
 
-	public Bloqueo(Proceso proceso, int tiempo) {
+	public Bloqueo(Proceso proceso, int tiempo, PanelSimulacion panelSimulacion) {
+		this.panelSimulacion=panelSimulacion;
 		this.proceso = proceso;
 		this.tiempo = tiempo;
 	}
@@ -18,7 +22,7 @@ public class Bloqueo implements Runnable {
 	public void run() {
 		synchronized (lock) {
 			for (int i = tiempo; i >0; i--) {
-				System.out.println(proceso.toString()+ "Tiempo de bloqueo restante: "+i);
+				panelSimulacion.actualizarTiempoBloqueo(tiempo, i);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -27,6 +31,7 @@ public class Bloqueo implements Runnable {
 				if(proceso.isTerminadoPorError())
 					break;
 			}
+			panelSimulacion.actualizarTiempoBloqueo(tiempo, 0);
 			proceso.desbloquear();
 			lock.notify();
 		}

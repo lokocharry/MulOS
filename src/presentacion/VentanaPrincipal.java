@@ -3,6 +3,7 @@ package presentacion;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -43,6 +44,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         JMenu fileMenu = new JMenu ("Archivo");
         JMenuItem agregar_procesosItem = new JMenuItem ("Agregar procesos");
         agregar_procesosItem.setActionCommand("agregarProcesos");
+        agregar_procesosItem.setMnemonic(KeyEvent.VK_A);
         agregar_procesosItem.addActionListener(this);
         fileMenu.add (agregar_procesosItem);
         JMenuItem iniciarItem = new JMenuItem ("Iniciar simulación");
@@ -84,6 +86,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         setSize(780, 366);
         setLayout (new GridLayout());
         setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
 
         //add components
         setJMenuBar(menubar);

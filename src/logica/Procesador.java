@@ -44,9 +44,18 @@ public class Procesador implements Runnable {
 		while(!procesos.isEmpty()){
 			synchronized (lock) {
 				proceso=procesos.remove();
+				panelSimulacion.ActualizarProceso(proceso.getNombre());
+				panelSimulacion.repaint();
+				try {
+					Thread.sleep(1500);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 				while(proceso.getTiempoEjecutado()<proceso.getTiempoEjecucion()&&!proceso.isTerminadoPorError()) {
+					proceso.setListo(false);
 					System.out.println(proceso.toString());
 					try {
+						panelSimulacion.repaint();
 						panelSimulacion.actualizarTiempoEjecucion(proceso.getTiempoEjecucion(), proceso.tiempoRestante());
 						proceso.sumarTiempoEjecutado(1);
 						Thread.sleep(1000);
@@ -64,8 +73,10 @@ public class Procesador implements Runnable {
 				}
 				panelSimulacion.actualizarTiempoEjecucion(proceso.getTiempoEjecucion(), proceso.tiempoRestante());
 				System.out.println(proceso.toString()+" terminado");
+				panelSimulacion.repaint();
 			}
 		}
+		panelSimulacion.repaint();
 	}
 
 	public void setPanelSimulacion(PanelSimulacion panelSimulacion) {
@@ -97,4 +108,9 @@ public class Procesador implements Runnable {
 		}
 		s.close();
 	}
+
+	public Proceso getProceso() {
+		return proceso;
+	}
+
 }

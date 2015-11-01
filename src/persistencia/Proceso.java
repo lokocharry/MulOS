@@ -9,6 +9,7 @@ public class Proceso {
 	private int tiempoEjecucion;
 	private int tamanio;
 	private int tiempoEjecutado;
+	private boolean listo=true;
 	private boolean bloqueado;
 	private boolean terminadoPorError;
 	
@@ -63,6 +64,7 @@ public class Proceso {
 	 */
 	public void desbloquear(){
 		bloqueado=false;
+		listo=true;
 	}
 	
 	public Vector<Object> toVector(){
@@ -141,6 +143,14 @@ public class Proceso {
 
 	public void setTerminadoPorError(boolean terminadoPorError) {
 		this.terminadoPorError = terminadoPorError;
+	}
+
+	public boolean isListo() {
+		return listo;
+	}
+
+	public void setListo(boolean listo) {
+		this.listo = listo;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import persistencia.Proceso;
 import presentacion.PanelSimulacion;
+import presentacion.VentanaPrincipal;
 
 public class Procesador implements Runnable {
 
@@ -12,11 +13,13 @@ public class Procesador implements Runnable {
 
 	private ArrayDeque<Proceso> procesos;
 	private Proceso proceso;
+	private VentanaPrincipal ventanaPrincipal;
 	
 	private PanelSimulacion panelSimulacion;
 
-	public Procesador(ArrayDeque<Proceso> procesos) {
+	public Procesador(ArrayDeque<Proceso> procesos, VentanaPrincipal ventanaPrincipal) {
 		this.procesos = procesos;
+		this.ventanaPrincipal=ventanaPrincipal;
 	}
 
 	public void bloquearProceso(){
@@ -30,6 +33,7 @@ public class Procesador implements Runnable {
 	public boolean terminarProcesoPorError(){
 		if(proceso.isBloqueado()){
 			proceso.setTerminadoPorError(true);
+			proceso.setListo(false);
 			System.out.println(proceso.toString()+" terminado por error de E/S");
 			return true;
 		}
@@ -57,14 +61,14 @@ public class Procesador implements Runnable {
 					try {
 						panelSimulacion.repaint();
 						panelSimulacion.actualizarTiempoEjecucion(proceso.getTiempoEjecucion(), proceso.tiempoRestante());
-						proceso.sumarTiempoEjecutado(1);
 						Thread.sleep(1000);
+						proceso.sumarTiempoEjecutado(1);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 					if(proceso.isBloqueado()){
 						try {
-							new Thread(new Bloqueo(proceso, 5, panelSimulacion)).start();;
+							new Thread(new Bloqueo(proceso, (int)panelSimulacion.getTxtTiempoBloqueo().getValue(), panelSimulacion)).start();
 							lock.wait();
 						} catch (InterruptedException e) {
 							e.printStackTrace();
@@ -73,6 +77,13 @@ public class Procesador implements Runnable {
 				}
 				panelSimulacion.actualizarTiempoEjecucion(proceso.getTiempoEjecucion(), proceso.tiempoRestante());
 				System.out.println(proceso.toString()+" terminado");
+				ventanaPrincipal.agregarProcesoTerminado(proceso);
+				panelSimulacion.repaint();
+				try {
+					Thread.sleep(1500);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 				panelSimulacion.repaint();
 			}
 		}
@@ -81,32 +92,6 @@ public class Procesador implements Runnable {
 
 	public void setPanelSimulacion(PanelSimulacion panelSimulacion) {
 		this.panelSimulacion = panelSimulacion;
-	}
-
-	public static void main(String[] args) {
-		Proceso p1=new Proceso(1, "P1", 10, 100);
-		Proceso p2=new Proceso(2, "P2", 10, 100);
-
-		ArrayDeque<Proceso> procesos=new ArrayDeque<>();
-		procesos.add(p1);
-		procesos.add(p2);
-
-		Procesador procesador=new Procesador(procesos);
-
-		new Thread(procesador).start();
-
-		Scanner s=new Scanner(System.in);
-		int opcion=0;
-		while(opcion!=3){
-			opcion=s.nextInt();
-			if(opcion==1){
-				procesador.bloquearProceso();
-			}
-			if(opcion==2){
-				procesador.terminarProcesoPorError();
-			}
-		}
-		s.close();
 	}
 
 	public Proceso getProceso() {

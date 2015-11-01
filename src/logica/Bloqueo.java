@@ -23,6 +23,7 @@ public class Bloqueo implements Runnable {
 		synchronized (lock) {
 			for (int i = tiempo; i >0; i--) {
 				panelSimulacion.actualizarTiempoBloqueo(tiempo, i);
+				panelSimulacion.repaint();
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -33,6 +34,7 @@ public class Bloqueo implements Runnable {
 			}
 			panelSimulacion.actualizarTiempoBloqueo(tiempo, 0);
 			proceso.desbloquear();
+			panelSimulacion.repaint();
 			lock.notify();
 		}
 	}

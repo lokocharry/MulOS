@@ -31,6 +31,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private JScrollPane panelProcesos;
     private PanelSimulacion panelSimulacion;
     private JTable tablaProcesos;
+    private VentanaProcesosTerminados ventanaProcesosTerminados;
     
     private Run run;
     
@@ -39,6 +40,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     public VentanaPrincipal(Run run) {
     	this.run=run;
     	crearProceso=new DialogoCrearProceso(this.run, this);
+    	ventanaProcesosTerminados=new VentanaProcesosTerminados();
     	
         //construct preComponents
         JMenu fileMenu = new JMenu ("Archivo");
@@ -83,7 +85,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         panelSimulacion.setBorder(BorderFactory.createTitledBorder("Simulación"));
 
         //adjust size and set layout
-        setSize(780, 366);
+        setSize(1170, 366);
         setLayout (new GridLayout());
         setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -92,6 +94,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         setJMenuBar(menubar);
         add(panelProcesos);
         add(panelSimulacion);
+        add(ventanaProcesosTerminados);
 
         //set component bounds (only needed by Absolute Positioning)
         menubar.setBounds (0, 0, 670, 25);
@@ -104,6 +107,10 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     	DefaultTableModel model=(DefaultTableModel) tablaProcesos.getModel();
     	model.addRow(p.toVector());
     }
+    
+    public void agregarProcesoTerminado(Proceso p){
+    	ventanaProcesosTerminados.agregarProceso(p);
+    }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -113,7 +120,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 			crearProceso.setVisible(true);
 			break;
 		case "iniciar":
-			procesador=new Procesador(run.getProcesos());
+			procesador=new Procesador(run.getProcesos(), this);
 			procesador.setPanelSimulacion(panelSimulacion);
 			panelSimulacion.setProcesador(procesador);
 			new Thread(procesador).start();

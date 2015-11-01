@@ -33,7 +33,6 @@ public class PanelSimulacion extends JPanel implements ActionListener {
 	private JSpinner txtTiempoBloqueo;
 	private JButton btnErrorES;
 	private JLabel lblProceso;
-	private Graphics g;
 
 	private Procesador procesador;
 
@@ -97,8 +96,6 @@ public class PanelSimulacion extends JPanel implements ActionListener {
 		txtTiempoBloqueo.setBounds (325, 15, 35, 25);
 		btnErrorES.setBounds (260, 40, 100, 25);
 		lblProceso.setBounds(6, 270, 100, 25);
-
-		g=this.getGraphics();
 	}
 
 	public void actualizarTiempoEjecucion(int tiempoEjecucion, int tiempoRestante){
@@ -124,10 +121,12 @@ public class PanelSimulacion extends JPanel implements ActionListener {
 			if(procesador.getProceso()!=null){
 				if(procesador.getProceso().isListo())
 					pintarListo(g);
-				if(!procesador.getProceso().isListo()&&!procesador.getProceso().isBloqueado())
+				if(!procesador.getProceso().isListo()&&!procesador.getProceso().isBloqueado()&&procesador.getProceso().tiempoRestante()>0)
 					pintarEjecucion(g);
 				if(procesador.getProceso().isBloqueado())
 					pintarBloqueado(g);
+				if(procesador.getProceso().tiempoRestante()==0||procesador.getProceso().isTerminadoPorError())
+					pintarTerminado(g);
 			}
 	}
 
@@ -148,6 +147,12 @@ public class PanelSimulacion extends JPanel implements ActionListener {
 		g.setColor(myColour);
 		g.fillRect(175, 185, 120, 60);
 	}
+	
+	private void pintarTerminado(Graphics g) {
+		Color myColour = new Color(255, 192, 203, 128);
+		g.setColor(myColour);
+		g.fillRect(300, 110, 80, 30);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -164,6 +169,10 @@ public class PanelSimulacion extends JPanel implements ActionListener {
 
 	public void setProcesador(Procesador procesador) {
 		this.procesador = procesador;
+	}
+
+	public JSpinner getTxtTiempoBloqueo() {
+		return txtTiempoBloqueo;
 	}
 
 }

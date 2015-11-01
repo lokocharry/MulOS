@@ -60,7 +60,7 @@ public class Proceso {
 	}
 	
 	/**
-	 * Vambia el estado de bloqueo del proceso a false
+	 * Cambia el estado de bloqueo del proceso a false
 	 */
 	public void desbloquear(){
 		bloqueado=false;
@@ -73,6 +73,8 @@ public class Proceso {
 		vector.add(nombre);
 		vector.add(tamanio);
 		vector.add(tiempoEjecucion);
+		vector.add(tiempoEjecutado);
+		vector.add(terminadoPorError);
 		return vector;
 	}
 	

@@ -1,9 +1,7 @@
 package run;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.ArrayDeque;
 
-import logica.Procesador;
 import persistencia.Proceso;
 import presentacion.VentanaPrincipal;
 

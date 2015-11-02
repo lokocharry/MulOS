@@ -85,7 +85,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         panelSimulacion.setBorder(BorderFactory.createTitledBorder("Simulación"));
 
         //adjust size and set layout
-        setSize(1170, 366);
+        setSize(1270, 366);
         setLayout (new GridLayout());
         setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -106,6 +106,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     public void agregarProcesoATabla(Proceso p){
     	DefaultTableModel model=(DefaultTableModel) tablaProcesos.getModel();
     	model.addRow(p.toVector());
+    }
+    
+    public void eliminarProcesoATabla(){
+    	DefaultTableModel model=(DefaultTableModel) tablaProcesos.getModel();
+    	model.removeRow(0);
     }
     
     public void agregarProcesoTerminado(Proceso p){

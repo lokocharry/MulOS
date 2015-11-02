@@ -2,6 +2,11 @@ package persistencia;
 
 import java.util.Vector;
 
+/**
+ * Representación de un Proceso con sus atributos
+ * @author Jorge Lozano
+ *
+ */
 public class Proceso {
 	
 	private int PID;
@@ -67,6 +72,10 @@ public class Proceso {
 		listo=true;
 	}
 	
+	/**
+	 * Convierte la instancia del Proceso a un objeto Vector 
+	 * @return Bojeto Vector del Proceso
+	 */
 	public Vector<Object> toVector(){
 		Vector<Object> vector=new Vector<>();
 		vector.add(PID);
@@ -86,75 +95,129 @@ public class Proceso {
 		return PID;
 	}
 
-
+	/**
+	 * Asignar PID
+	 * @param pID
+	 */
 	public void setPID(int pID) {
 		PID = pID;
 	}
 
-
+	/**
+	 * 
+	 * @return Nombre del Proceso
+	 */
 	public String getNombre() {
 		return nombre;
 	}
 
-
+	/**
+	 * Asignar Nombre
+	 * @param nombre
+	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
-
+	/**
+	 * 
+	 * @return Tiempo de ejecución
+	 */
 	public int getTiempoEjecucion() {
 		return tiempoEjecucion;
 	}
 
-
+	/**
+	 * Asirnar Timpo de ejecución
+	 * @param tiempoEjecucion
+	 */
 	public void setTiempoEjecucion(int tiempoEjecucion) {
 		this.tiempoEjecucion = tiempoEjecucion;
 	}
 
-
+	/**
+	 * 
+	 * @return Tamaño del proceso
+	 */
 	public int getTamanio() {
 		return tamanio;
 	}
 
-
+	/**
+	 * Asignar tamaño
+	 * @param tamanio
+	 */
 	public void setTamanio(int tamanio) {
 		this.tamanio = tamanio;
 	}
 
-
+	/**
+	 * 
+	 * @return Obtener tiempo ejecutado
+	 */
 	public int getTiempoEjecutado() {
 		return tiempoEjecutado;
 	}
 
-
+	/**
+	 * Asirnar tiempo ejecutado
+	 * @param tiempoEjecutado
+	 */
 	public void setTiempoEjecutado(int tiempoEjecutado) {
 		this.tiempoEjecutado = tiempoEjecutado;
 	}
 
+	/**
+	 * 
+	 * @return True o False
+	 */
 	public boolean isBloqueado() {
 		return bloqueado;
 	}
 
+	/**
+	 * Asignar estado de bloqueo
+	 * @param bloqueado
+	 */
 	public void setBloqueado(boolean bloqueado) {
 		this.bloqueado = bloqueado;
 	}
 
+	/**
+	 * 
+	 * @return True o False
+	 */
 	public boolean isTerminadoPorError() {
 		return terminadoPorError;
 	}
-
+	
+	/**
+	 * Terminar proceso por error de E/S
+	 * @param terminadoPorError
+	 */
 	public void setTerminadoPorError(boolean terminadoPorError) {
 		this.terminadoPorError = terminadoPorError;
 	}
 
+	/**
+	 * 
+	 * @return True o False
+	 */
 	public boolean isListo() {
 		return listo;
 	}
 
+	/**
+	 * Asirnar estado de Listo al Proceso
+	 * @param listo
+	 */
 	public void setListo(boolean listo) {
 		this.listo = listo;
 	}
 
+	/**
+	 * Representación del objeto Proceso
+	 */
 	@Override
 	public String toString() {
 		return "Proceso [PID=" + PID + ", nombre=" + nombre + ", tiempoRestante=" + tiempoRestante() + "]";

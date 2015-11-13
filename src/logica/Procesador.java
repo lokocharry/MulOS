@@ -78,11 +78,11 @@ public class Procesador implements Runnable {
 	 */
 	@Override
 	public void run() {
-		while(!procesos.isEmpty()){
-			synchronized (lock) {
+		while(true){
+			if(!procesos.isEmpty()){
 				proceso=procesos.remove(); //Se obtiene el proceso que se encuentra en la cabeza de la cola
 				panelSimulacion.ActualizarProceso(proceso.getNombre()); //Actualiza el proceso en el PanelSimulacion
-				panelSimulacion.repaint(); //Repintar el anel
+				panelSimulacion.repaint(); //Repintar el panel
 				try {
 					Thread.sleep(1500); //Esperar 1.5 segundos
 				} catch (InterruptedException e1) {
@@ -99,28 +99,20 @@ public class Procesador implements Runnable {
 						e.printStackTrace();
 					}
 					if(proceso.isBloqueado()){ //Se verifica si el proceso está bloqueado
-						try {
-							new Thread(new Bloqueo(proceso, (int)panelSimulacion.getTxtTiempoBloqueo().getValue(), panelSimulacion)).start(); //Si inicia el hilo de bloqueo
-							lock.wait(); //Se pausa el hilo actual
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+						new Thread(new Bloqueo(proceso, (int)panelSimulacion.getTxtTiempoBloqueo().getValue(), panelSimulacion, this)).start(); //Si inicia el hilo de bloqueo
+						break;
 					}
+					panelSimulacion.repaint();
 				}
-				panelSimulacion.actualizarTiempoEjecucion(proceso.getTiempoEjecucion(), proceso.tiempoRestante());
-				System.out.println(proceso.toString()+" terminado");
-				ventanaPrincipal.agregarProcesoTerminado(proceso); //Se agraga el proceso a Procesos Terminados
-				ventanaPrincipal.eliminarProcesoATabla(); //Se elimina el proceso de la lista de Procesos
-				panelSimulacion.repaint();
-				try {
-					Thread.sleep(1500);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
+				if(proceso.tiempoRestante()==0||proceso.isTerminadoPorError()){
+					panelSimulacion.actualizarTiempoEjecucion(proceso.getTiempoEjecucion(), proceso.tiempoRestante());
+					System.out.println(proceso.toString()+" terminado");
+					ventanaPrincipal.agregarProcesoTerminado(proceso); //Se agraga el proceso a Procesos Terminados
+					ventanaPrincipal.eliminarProcesoATabla(); //Se elimina el proceso de la lista de Procesos
+					panelSimulacion.repaint();
 				}
-				panelSimulacion.repaint();
 			}
 		}
-		panelSimulacion.repaint();
 	}
 
 	public void setPanelSimulacion(PanelSimulacion panelSimulacion) {
@@ -129,6 +121,9 @@ public class Procesador implements Runnable {
 
 	public Proceso getProceso() {
 		return proceso;
+	}
+	public ArrayDeque<Proceso> getProcesos() {
+		return procesos;
 	}
 
 }

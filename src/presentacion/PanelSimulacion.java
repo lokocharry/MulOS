@@ -84,7 +84,7 @@ public class PanelSimulacion extends JPanel implements ActionListener {
 		//set component bounds (only needed by Absolute Positioning)
 		lblEjecucuion.setBounds (90, 25, 75, 25);
 		prTiempoejecucion.setBounds (75, 45, 110, 15);
-		lblBloqueado.setBounds (200, 185, 65, 25);
+		lblBloqueado.setBounds (200, 185, 105, 25);
 		lblListo.setBounds (10, 185, 35, 25);
 		lblTerminado.setBounds (305, 115, 65, 20);
 		prTiempoBloqueo.setBounds (180, 210, 110, 15);
@@ -104,7 +104,8 @@ public class PanelSimulacion extends JPanel implements ActionListener {
 		lblTiempoRestante.setText("Tiempo restante: "+tiempoRestante);
 	}
 
-	public void actualizarTiempoBloqueo(int tiempoBloqueo, int tiempoRestante){
+	public void actualizarTiempoBloqueo(int tiempoBloqueo, int tiempoRestante, String nombre){
+		lblBloqueado.setText("Bloqueado: "+nombre);
 		prTiempoBloqueo.setMaximum(tiempoBloqueo);
 		prTiempoBloqueo.setValue(tiempoRestante);
 		lblTiempoBloqueo.setText("Tiempo restante: "+tiempoRestante);
